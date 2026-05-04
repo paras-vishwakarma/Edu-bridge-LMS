@@ -65,6 +65,6 @@ Contributions are welcome. Please fork the repository, create a feature branch, 
 MIT
 
 ## 12. Author
-Your Name
-GitHub: github.com/yourusername
-Email: your.email@example.com
+paras vishwakarma
+GitHub: https://github.com/paras-vishwakarma
+Email: paras0vishwakarma.com
