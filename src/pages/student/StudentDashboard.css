@@ -1,0 +1,437 @@
+/* Student Dashboard */
+.student-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Welcome Banner */
+.welcome-banner {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.welcome-banner-content {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+
+.welcome-title .gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.welcome-banner-art {
+  position: absolute;
+  right: -30px;
+  top: -30px;
+}
+
+.welcome-orb {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(108, 92, 231, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  animation: fadeInUp 0.5s ease-out 0.1s backwards;
+}
+
+.stats-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: var(--transition-smooth);
+}
+
+.stats-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.stats-card-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-secondary);
+}
+
+.stats-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-card-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.stats-card-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 0.2rem;
+}
+
+.stats-card-trend {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+}
+
+.stats-card-trend.up {
+  background: rgba(0, 184, 148, 0.12);
+  color: #00b894;
+}
+
+.stats-card-trend.down {
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+}
+
+/* Dashboard sections */
+.dashboard-section {
+  animation: fadeInUp 0.5s ease-out 0.2s backwards;
+}
+
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.section-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.section-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-secondary);
+  text-decoration: none;
+}
+
+.section-link:hover {
+  text-decoration: underline;
+}
+
+/* Courses Grid */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+/* Course Card */
+.course-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.course-card:hover {
+  border-color: var(--border-color-hover);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.course-card-thumbnail {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.course-card-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.course-card:hover .course-card-thumbnail img {
+  transform: scale(1.05);
+}
+
+.course-card-overlay {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.course-card-category {
+  padding: 0.25rem 0.6rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-secondary);
+}
+
+.course-card-level {
+  padding: 0.25rem 0.6rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.course-card-body {
+  padding: 1.2rem;
+}
+
+.course-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+}
+
+.course-card-instructor {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+}
+
+.course-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.course-card-rating,
+.course-card-students {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.review-count {
+  color: var(--text-muted);
+  margin-left: 0.2rem;
+}
+
+.course-card-progress {
+  margin-bottom: 0.75rem;
+}
+
+.course-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+
+.course-card-action {
+  padding: 0.35rem 0.8rem;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-family);
+}
+
+/* Progress Bar */
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--accent-primary);
+}
+
+.progress-sm .progress-track {
+  height: 4px;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Deadlines */
+.deadlines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.deadline-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.deadline-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.deadline-indicator {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  border-radius: 50%;
+}
+
+.deadline-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.deadline-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.deadline-course {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.deadline-date {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.deadline-days {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+}
+
+.deadline-full {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+}
+
+.btn-link {
+  display: inline-block;
+  margin-top: 0.8rem;
+  color: var(--accent-secondary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+.empty-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 768px) {
+  .welcome-banner {
+    padding: 1.5rem;
+  }
+
+  .welcome-title {
+    font-size: 1.3rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .courses-grid {
+    grid-template-columns: 1fr;
+  }
+}
