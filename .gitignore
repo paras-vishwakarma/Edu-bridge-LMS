@@ -30,3 +30,4 @@ dist-ssr
 
 # SQLite database (runtime data, not source)
 database.sqlite
+.vercel
