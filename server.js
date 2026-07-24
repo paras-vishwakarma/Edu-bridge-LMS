@@ -22,9 +22,10 @@ if (fs.existsSync(envPath)) {
     });
 }
 
-const PORT    = process.env.PORT || 5000;
-const IS_PROD = process.env.NODE_ENV === 'production';
-const DIST    = path.join(__dirname, 'dist');
+const PORT      = process.env.PORT || 5000;
+const IS_PROD   = process.env.NODE_ENV === 'production';
+const IS_VERCEL = !!process.env.VERCEL;
+const DIST      = path.join(__dirname, 'dist');
 
 // ── Express setup ─────────────────────────────────────────────────────────────
 const app = express();
@@ -51,8 +52,10 @@ if (IS_PROD && fs.existsSync(DIST)) {
   console.log(`[server] Serving static frontend from ${DIST}`);
 }
 
-// ── SQLite database — absolute path ──────────────────────────────────────────
-const DB_PATH = path.resolve(__dirname, 'database.sqlite');
+// ── SQLite database — absolute path (use /tmp on Vercel serverless) ─────────
+const DB_PATH = IS_VERCEL
+  ? '/tmp/database.sqlite'
+  : path.resolve(__dirname, 'database.sqlite');
 
 const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
@@ -215,9 +218,15 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ success: false, error: 'Internal server error.' });
 });
 
-// ── Start ─────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`[server] Backend running on http://localhost:${PORT}`);
-  if (IS_PROD) console.log(`[server] Mode: PRODUCTION — serving frontend from /dist`);
-  else         console.log(`[server] Mode: DEVELOPMENT — expecting Vite on :5173`);
-});
+// ── Start (skip in Vercel serverless — it manages the HTTP lifecycle) ────────
+const isMain = process.argv[1] === __filename;
+if (!IS_VERCEL && isMain) {
+  app.listen(PORT, () => {
+    console.log(`[server] Backend running on http://localhost:${PORT}`);
+    if (IS_PROD) console.log(`[server] Mode: PRODUCTION — serving frontend from /dist`);
+    else         console.log(`[server] Mode: DEVELOPMENT — expecting Vite on :5173`);
+  });
+}
+
+// Export for Vercel serverless function
+export default app;
