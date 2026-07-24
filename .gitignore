@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables (never commit secrets)
+.env
+.env.local
+.env.production
+
+# SQLite database (runtime data, not source)
+database.sqlite

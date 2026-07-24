@@ -37,40 +37,42 @@ function saveUsers(users) {
   localStorage.setItem(SEEDED_KEY, 'true'); // mark as seeded whenever we save
 }
 
-/** Generate a simple JWT-like token string (not cryptographically secure) */
-function makeToken(user) {
-  const payload = btoa(
-    JSON.stringify({ id: user.id, role: user.role, exp: Date.now() + 86_400_000 })
-  );
-  return `lerno.${payload}.sig`;
-}
-
 // ── Service ───────────────────────────────────────────────────────────────────
 export const authService = {
+  /**
+   * Login via backend API.
+   * Uses relative URL (/api/login) so it works with:
+   *  - Vite proxy in development (forwards to :5000)
+   *  - Same-origin Express server in production
+   */
   async login(email, password) {
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
       if (!data.success) return { success: false, error: data.error };
-      
+
       localStorage.setItem(TOKEN_KEY, data.token);
       localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       return { success: true, token: data.token, user: data.user };
-    } catch (e) {
-      return { success: false, error: 'Network error: ensure backend is running.' };
+    } catch {
+      return { success: false, error: 'Network error: ensure the backend server is running.' };
     }
   },
 
+  /**
+   * Register via backend API.
+   * Uses relative URL (/api/register).
+   */
   async register(name, email, password, role = 'student') {
     try {
-      const response = await fetch('http://localhost:5000/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role })
+        body: JSON.stringify({ name, email, password, role }),
       });
       const data = await response.json();
       if (!data.success) return { success: false, error: data.error };
@@ -78,8 +80,8 @@ export const authService = {
       localStorage.setItem(TOKEN_KEY, data.token);
       localStorage.setItem(USER_KEY, JSON.stringify(data.user));
       return { success: true, token: data.token, user: data.user };
-    } catch (e) {
-      return { success: false, error: 'Network error: ensure backend is running.' };
+    } catch {
+      return { success: false, error: 'Network error: ensure the backend server is running.' };
     }
   },
 
@@ -115,33 +117,43 @@ export const authService = {
     }
   },
 
+  /** Fetch all users from backend API (admin use). */
   async getAllUsers() {
     try {
-      const response = await fetch('http://localhost:5000/api/users');
+      const response = await fetch('/api/users');
+      if (!response.ok) return [];
       return await response.json();
-    } catch (e) {
+    } catch {
       return [];
     }
   },
 
+  /** Update user status via backend API (admin ban/unban). */
   async updateUserStatus(userId, status) {
-    const users = loadUsers();
-    const idx = users.findIndex(u => u.id === userId);
-    if (idx === -1) return { success: false, error: 'User not found.' };
-    users[idx].status = status;
-    saveUsers(users);
-
-    // If the user updated their own status, update the session too
     try {
-      const sessionUser = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
-      if (sessionUser && sessionUser.id === userId) {
-        localStorage.setItem(USER_KEY, JSON.stringify({ ...sessionUser, status }));
-      }
-    } catch { /* ignore */ }
+      const response = await fetch(`/api/users/${userId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      const data = await response.json();
+      if (!data.success) return { success: false, error: data.error };
 
-    return { success: true };
+      // Sync local session if the current user's status was updated
+      try {
+        const sessionUser = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+        if (sessionUser && sessionUser.id === userId) {
+          localStorage.setItem(USER_KEY, JSON.stringify({ ...sessionUser, status }));
+        }
+      } catch { /* ignore */ }
+
+      return { success: true };
+    } catch {
+      return { success: false, error: 'Network error.' };
+    }
   },
 
+  /** Update user profile fields (kept in localStorage for session). */
   async updateUserProfile(userId, updates) {
     const users = loadUsers();
     const idx = users.findIndex(u => u.id === userId);
@@ -164,12 +176,15 @@ export const authService = {
     return { success: true, user: users[idx] };
   },
 
+  /** Delete a user via backend API (admin use). */
   async deleteUser(userId) {
-    const users = loadUsers();
-    const filtered = users.filter(u => u.id !== userId);
-    if (filtered.length === users.length) return { success: false, error: 'User not found.' };
-    saveUsers(filtered);
-    return { success: true };
+    try {
+      const response = await fetch(`/api/users/${userId}`, { method: 'DELETE' });
+      const data = await response.json();
+      return data.success ? { success: true } : { success: false, error: data.error };
+    } catch {
+      return { success: false, error: 'Network error.' };
+    }
   },
 
   async getUserById(userId) {
